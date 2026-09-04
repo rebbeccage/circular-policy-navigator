@@ -1,0 +1,167 @@
+policy:
+  id: "EU-PPWR-2025-40"
+  short_name: "PPWR"
+  full_name: "Regulation (EU) 2025/40 on Packaging and Packaging Waste"
+  jurisdiction: "European Union"
+  celex: "32025R0040"
+
+  entry_into_force: "2025-02-11"
+  application_date: "2026-08-12"
+
+  status: "In force and applicable"
+  status_as_of: "2026-09-04"
+
+
+article_7:
+
+  article: "Article 7"
+
+  title_en: "Minimum recycled content in plastic packaging"
+  title_cn: "塑料包装最低再生含量"
+
+  core_message: >
+    塑料包装中的塑料部分须逐步达到最低消费后再生塑料含量要求。
+    核算按包装类型和形式，并以每个生产厂、每年度平均值为基础。
+
+
+  categories:
+
+    contact_sensitive_pet:
+      label: "接触敏感型PET包装"
+      note: "PET为主要成分；不含一次性塑料饮料瓶"
+      target_2030: 30
+      target_2040: 50
+      basis_2030: "Article 7(1)(a)"
+      basis_2040: "Article 7(2)(a)"
+
+    contact_sensitive_non_pet:
+      label: "接触敏感型非PET塑料包装"
+      note: "不含一次性塑料饮料瓶"
+      target_2030: 10
+      target_2040: 25
+      basis_2030: "Article 7(1)(b)"
+      basis_2040: "Article 7(2)(b)"
+
+    beverage_bottle:
+      label: "一次性塑料饮料瓶"
+      note: "Single-use plastic beverage bottles"
+      target_2030: 30
+      target_2040: 65
+      basis_2030: "Article 7(1)(c)"
+      basis_2040: "Article 7(2)(c)"
+
+    other_plastic:
+      label: "其他塑料包装"
+      note: "不属于上述三类的塑料包装"
+      target_2030: 35
+      target_2040: 65
+      basis_2030: "Article 7(1)(d)"
+      basis_2040: "Article 7(2)(d)"
+
+
+  calculation:
+
+    material:
+      "消费后塑料废物产生的再生塑料"
+
+    basis:
+      "按包装类型和形式，以每个生产厂、每年度平均值计算"
+
+    compliance_actor:
+      "制造商或进口商"
+
+    evidence:
+      "通过Annex VII所述包装技术资料证明符合要求"
+
+
+  source_routes:
+
+    eu:
+      label: "欧盟境内收集 / 再生"
+
+      summary: >
+        再生含量原则上应来自符合欧盟相关规则收集的消费后塑料废物，
+        并满足Article 7规定的相关再生条件。
+
+      conditions:
+        - "确认材料属于消费后塑料废物来源"
+        - "确认收集环节符合适用的欧盟规则"
+        - "确认再生环节满足适用的环境要求"
+        - "保存支持再生含量核算的技术资料"
+
+
+    third_country:
+      label: "第三国收集 / 再生"
+
+      summary: >
+        第三国来源材料可以纳入，但其收集和再生条件需要满足与欧盟相关要求等效的标准，
+        并受后续欧盟等效性评估、核验和认证方法约束。
+
+      conditions:
+        - "收集体系需达到促进高质量再生的等效标准"
+        - "适用情况下，再生设施环境要求需与欧盟相关要求等效"
+        - "需关注第三国等效性评估、核验和认证方法"
+        - "为后续第三方审核和证明材料要求预留数据基础"
+
+
+  pending_rules:
+
+    - date: "2026-12-31"
+      item: "再生含量计算与核验方法"
+      basis: "Article 7(8)"
+      status: "Pending"
+
+    - date: "2026-12-31"
+      item: "塑料再生技术可持续性标准"
+      basis: "Article 7(9)"
+      status: "Pending"
+
+    - date: "2026-12-31"
+      item: "第三国规则等效性的评估、核验和认证方法"
+      basis: "Article 7(10)"
+      status: "Pending"
+
+
+  timeline:
+
+    - date: "2025-02-11"
+      title: "PPWR生效"
+      type: "Regulation"
+
+    - date: "2026-08-12"
+      title: "PPWR开始适用"
+      type: "Application"
+
+    - date: "2026-12-31"
+      title: "Article 7关键实施方法截止日期"
+      type: "Methodology"
+
+    - date: "2030-01-01"
+      title: "第一阶段最低再生含量目标"
+      type: "Target"
+
+    - date: "2035-01-01"
+      title: "欧委会审查Article 7相关例外"
+      type: "Review"
+
+    - date: "2040-01-01"
+      title: "第二阶段最低再生含量目标"
+      type: "Target"
+
+
+  actions:
+
+    general:
+      - "确认包装是否属于Article 7适用范围"
+      - "确认包装所属的四类再生含量目标"
+      - "明确生产厂作为核算边界"
+      - "建立年度再生含量数据"
+      - "准备Annex VII相关技术资料"
+
+    third_country:
+      - "记录消费后塑料废物的来源和收集路径"
+      - "准备收集体系等效性相关证明"
+      - "准备再生设施和环境绩效相关资料"
+      - "持续跟踪Article 7(10)第三国等效性实施方法"
+      - "为第三方审核保留可追溯数据和证据"
+      

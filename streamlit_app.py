@@ -1,133 +1,441 @@
 import streamlit as st
+import yaml
+
+
+# ============================================================
+# 1. 页面设置
+# ============================================================
 
 st.set_page_config(
-    page_title="Policy Navigator",
-    page_icon="◌",
-    layout="wide",
-    initial_sidebar_state="expanded",
+    page_title="Circular Policy Navigator",
+    page_icon="🧭",
+    layout="wide"
 )
 
-st.markdown(
-    """
-    <style>
-    @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap');
 
-    :root {
-        --ink: #172421;
-        --muted: #6a7772;
-        --paper: #f5f6f0;
-        --panel: #ffffff;
-        --line: #dce2d9;
-        --mint: #cbe8d7;
-        --green: #1f6b4f;
-        --orange: #e77943;
-        --soft-orange: #fff0e7;
-    }
+# ============================================================
+# 2. 读取 PPWR 数据
+# ============================================================
 
-    .stApp { background: var(--paper); color: var(--ink); }
-    [data-testid="stHeader"] { background: transparent; }
-    [data-testid="stSidebar"] {
-        background: #e8eee5;
-        border-right: 1px solid var(--line);
-    }
-    [data-testid="stSidebar"] > div:first-child { padding-top: 2rem; }
-    .block-container { max-width: 1380px; padding: 2.2rem 3.5rem 4rem; }
-    .stMarkdown, .stTextInput, .stSelectbox, .stButton { font-family: 'Manrope', sans-serif; }
-    h1, h2, h3, p { font-family: 'Manrope', sans-serif; }
-    h1 { letter-spacing: -0.045em; line-height: 0.98; }
-    h2 { letter-spacing: -0.03em; }
-    .eyebrow, .mono, .metric-label, .tag { font-family: 'DM Mono', monospace; text-transform: uppercase; letter-spacing: 0.08em; }
-    .eyebrow { color: var(--green); font-size: 0.72rem; font-weight: 500; margin-bottom: 1.25rem; }
-    .hero { padding: 1.5rem 0 2rem; }
-    .hero h1 { font-size: clamp(3.3rem, 6vw, 6.7rem); max-width: 850px; margin: 0 0 1.4rem; color: var(--ink); }
-    .hero-copy { max-width: 570px; color: var(--muted); font-size: 1.05rem; line-height: 1.6; }
-    .hero-mark { color: var(--orange); }
-    .section-rule { border-top: 1px solid var(--line); margin: 1rem 0 2.2rem; }
-    .section-title { font-size: 1.25rem; font-weight: 700; margin: 0 0 1rem; }
-    .section-note { color: var(--muted); font-size: 0.9rem; margin-top: -0.65rem; margin-bottom: 1.4rem; }
-    .policy-card { background: var(--panel); border: 1px solid var(--line); border-radius: 3px; padding: 1.45rem; min-height: 220px; position: relative; overflow: hidden; }
-    .policy-card:after { content: ''; position: absolute; width: 80px; height: 80px; border: 1px solid var(--mint); border-radius: 50%; right: -25px; bottom: -28px; }
-    .tag { display: inline-block; color: var(--green); background: var(--mint); border-radius: 2px; padding: 0.35rem 0.5rem; font-size: 0.63rem; }
-    .policy-card h3 { font-size: 1.2rem; margin: 1rem 0 0.65rem; }
-    .policy-card p { color: var(--muted); line-height: 1.55; font-size: 0.88rem; margin-bottom: 1.1rem; }
-    .card-meta { color: var(--muted); font-family: 'DM Mono', monospace; font-size: 0.68rem; }
-    .path-wrap { background: var(--ink); color: white; border-radius: 3px; padding: 1.6rem 1.8rem 1.8rem; margin-top: 2.5rem; }
-    .path-wrap .section-title { color: white; }
-    .path-wrap .section-note { color: #aabbb2; }
-    .path-step { border-top: 1px solid #45554e; padding-top: 1rem; min-height: 135px; }
-    .path-number { color: var(--orange); font-family: 'DM Mono', monospace; font-size: 0.75rem; }
-    .path-step h3 { color: white; font-size: 1rem; margin: 0.7rem 0 0.45rem; }
-    .path-step p { color: #aabbb2; font-size: 0.8rem; line-height: 1.5; }
-    .metric-strip { display: flex; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 1.4rem 0; margin: 0.5rem 0 2.6rem; }
-    .metric { flex: 1; border-right: 1px solid var(--line); padding-left: 1.3rem; }
-    .metric:first-child { padding-left: 0; }
-    .metric:last-child { border-right: none; }
-    .metric-value { font-size: 1.7rem; font-weight: 700; letter-spacing: -0.04em; }
-    .metric-label { color: var(--muted); font-size: 0.62rem; margin-top: 0.25rem; }
-    .side-brand { color: var(--ink); font-family: 'Manrope', sans-serif; font-size: 1.1rem; font-weight: 800; letter-spacing: -0.03em; padding: 0 1rem 2.3rem; }
-    .side-brand span { color: var(--orange); }
-    .side-caption { color: var(--muted); font-family: 'DM Mono', monospace; font-size: 0.65rem; line-height: 1.5; padding: 2rem 1rem 0; border-top: 1px solid #d3dcd1; }
-    .stButton > button { border: 1px solid var(--line); background: transparent; border-radius: 2px; color: var(--ink); font-size: 0.78rem; }
-    .stButton > button:hover { border-color: var(--green); color: var(--green); }
-    </style>
-    """,
-    unsafe_allow_html=True,
+@st.cache_data
+def load_policy():
+    with open("data/ppwr.yaml", "r", encoding="utf-8") as file:
+        return yaml.safe_load(file)
+
+
+data = load_policy()
+
+policy = data["policy"]
+article = data["article_7"]
+
+
+# ============================================================
+# 3. 页面标题
+# ============================================================
+
+st.title("Circular Policy Navigator")
+
+st.caption(
+    "将复杂循环经济政策转化为结构化要求、关键节点与行动路径"
 )
 
-with st.sidebar:
-    st.markdown('<div class="side-brand">POLICY<span>•</span><br>NAVIGATOR</div>', unsafe_allow_html=True)
-    st.radio("Explore", ["Overview", "Policy library", "Compare regions", "Action planner"], label_visibility="collapsed")
-    st.markdown(
-        '<div class="side-caption">A working index for people turning circular economy policy into practical decisions.<br><br>BUILD 01 / 2025</div>',
-        unsafe_allow_html=True,
+st.divider()
+
+
+# ============================================================
+# 4. PPWR 概览
+# ============================================================
+
+st.subheader("PPWR · Policy Overview")
+
+col1, col2, col3, col4 = st.columns(4)
+
+with col1:
+    st.metric(
+        "政策",
+        policy["short_name"]
     )
 
-st.markdown('<div class="eyebrow">Circular economy intelligence / 01</div>', unsafe_allow_html=True)
-st.markdown(
-    '<div class="hero"><h1>Make policy<br><span class="hero-mark">actionable.</span></h1><p class="hero-copy">A clear starting point for navigating the rules, signals and obligations shaping a circular economy.</p></div>',
-    unsafe_allow_html=True,
+with col2:
+    st.metric(
+        "法域",
+        policy["jurisdiction"]
+    )
+
+with col3:
+    st.metric(
+        "开始适用",
+        policy["application_date"]
+    )
+
+with col4:
+    st.metric(
+        "状态",
+        policy["status"]
+    )
+
+
+st.info(
+    f'**{article["article"]} · {article["title_cn"]}**\n\n'
+    f'{article["core_message"]}'
 )
 
-query = st.text_input("Search the policy library", placeholder="Try: packaging waste, right to repair, textiles...", label_visibility="collapsed")
 
-st.markdown(
-    '<div class="metric-strip"><div class="metric"><div class="metric-value">48</div><div class="metric-label">Policies indexed</div></div><div class="metric"><div class="metric-value">12</div><div class="metric-label">Regions tracked</div></div><div class="metric"><div class="metric-value">06</div><div class="metric-label">Material systems</div></div><div class="metric"><div class="metric-value">2025</div><div class="metric-label">Latest update</div></div></div>',
-    unsafe_allow_html=True,
+# ============================================================
+# 5. 用户选择情景
+# ============================================================
+
+st.subheader("① 选择你的政策情景")
+
+left, right = st.columns(2)
+
+
+# 包装类型
+category_options = {
+    value["label"]: key
+    for key, value in article["categories"].items()
+}
+
+with left:
+    selected_category_label = st.selectbox(
+        "你的塑料包装属于哪一类？",
+        list(category_options.keys())
+    )
+
+
+# 再生材料来源
+source_options = {
+    value["label"]: key
+    for key, value in article["source_routes"].items()
+}
+
+with right:
+    selected_source_label = st.radio(
+        "再生塑料来自哪里？",
+        list(source_options.keys())
+    )
+
+
+category_key = category_options[selected_category_label]
+source_key = source_options[selected_source_label]
+
+category = article["categories"][category_key]
+source = article["source_routes"][source_key]
+
+
+# ============================================================
+# 6. 自动生成政策结果
+# ============================================================
+
+st.divider()
+
+st.subheader("② 政策要求")
+
+result1, result2, result3 = st.columns(3)
+
+
+with result1:
+    st.metric(
+        "2030最低再生含量",
+        f'{category["target_2030"]}%'
+    )
+    st.caption(
+        f'法律依据：{category["basis_2030"]}'
+    )
+
+
+with result2:
+    st.metric(
+        "2040最低再生含量",
+        f'{category["target_2040"]}%'
+    )
+    st.caption(
+        f'法律依据：{category["basis_2040"]}'
+    )
+
+
+with result3:
+    st.metric(
+        "核算边界",
+        "生产厂 × 年度"
+    )
+    st.caption(
+        "按包装类型和形式计算"
+    )
+
+
+st.write(
+    f'**当前选择：** {category["label"]}'
 )
 
-st.markdown('<div class="section-title">Start with a signal</div>', unsafe_allow_html=True)
-st.markdown('<div class="section-note">The latest policy movements worth a closer look.</div>', unsafe_allow_html=True)
+st.caption(
+    category["note"]
+)
 
-policies = [
-    ("EUROPEAN UNION", "Packaging & Packaging Waste Regulation", "Recycled content, reuse targets and the redesign of packaging systems.", "In force · 2025"),
-    ("UNITED KINGDOM", "Extended Producer Responsibility", "A shifting cost and data landscape for producers of packaging.", "Updated · 2024"),
-    ("GLOBAL SIGNAL", "Right to Repair", "What repairability requirements mean for product teams and operators.", "Growing · 18 markets"),
-]
-if query:
-    policies = [policy for policy in policies if query.lower() in " ".join(policy).lower()]
 
-if policies:
-    columns = st.columns(3, gap="medium")
-    for column, (tag, title, description, meta) in zip(columns, policies):
-        with column:
-            st.markdown(
-                f'<div class="policy-card"><span class="tag">{tag}</span><h3>{title}</h3><p>{description}</p><div class="card-meta">{meta} &nbsp; ↗</div></div>',
-                unsafe_allow_html=True,
-            )
+# ============================================================
+# 7. 核算逻辑
+# ============================================================
+
+st.subheader("③ 如何核算？")
+
+calc1, calc2 = st.columns(2)
+
+
+with calc1:
+
+    st.markdown("#### 核算对象")
+
+    st.write(
+        article["calculation"]["material"]
+    )
+
+    st.markdown("#### 核算方式")
+
+    st.write(
+        article["calculation"]["basis"]
+    )
+
+
+with calc2:
+
+    st.markdown("#### 合规责任主体")
+
+    st.write(
+        article["calculation"]["compliance_actor"]
+    )
+
+    st.markdown("#### 合规证明")
+
+    st.write(
+        article["calculation"]["evidence"]
+    )
+
+
+# ============================================================
+# 8. 材料来源要求
+# ============================================================
+
+st.subheader("④ 再生材料来源要求")
+
+if source_key == "third_country":
+
+    st.warning(
+        "你选择的是第三国来源再生塑料：除再生含量目标外，"
+        "还需要关注收集、再生以及等效性核验要求。"
+    )
+
 else:
-    st.info("No matching signals yet. Try a broader search term.")
 
-st.markdown(
-    '<div class="path-wrap"><div class="section-title">Your route through the policy landscape</div><div class="section-note">Move from the text of a policy to a confident next step.</div>',
-    unsafe_allow_html=True,
+    st.success(
+        "你选择的是欧盟境内来源再生塑料。"
+    )
+
+
+st.write(
+    source["summary"]
 )
-path_columns = st.columns(3, gap="large")
-for column, number, title, description in zip(
-    path_columns,
-    ["01", "02", "03"],
-    ["Map the policy", "Read the impact", "Plan the response"],
-    ["See the actors, materials and obligations in one view.", "Identify where requirements touch your operating model.", "Turn a regulatory signal into a practical workstream."],
+
+
+for condition in source["conditions"]:
+
+    st.write(
+        f"• {condition}"
+    )
+
+
+# ============================================================
+# 9. 简化政策路径图
+# ============================================================
+
+st.subheader("⑤ Policy Path")
+
+path1, path2, path3, path4, path5 = st.columns(5)
+
+
+with path1:
+    st.markdown(
+        """
+        ### 1
+        **PPWR**
+
+        Article 7
+        """
+    )
+
+
+with path2:
+    st.markdown(
+        f"""
+        ### 2
+        **包装类型**
+
+        {category["label"]}
+        """
+    )
+
+
+with path3:
+    st.markdown(
+        f"""
+        ### 3
+        **2030目标**
+
+        **{category["target_2030"]}%**
+        """
+    )
+
+
+with path4:
+    st.markdown(
+        f"""
+        ### 4
+        **材料来源**
+
+        {source["label"]}
+        """
+    )
+
+
+with path5:
+
+    if source_key == "third_country":
+
+        st.markdown(
+            """
+            ### 5
+            **额外关注**
+
+            第三国等效性
+            """
+        )
+
+    else:
+
+        st.markdown(
+            """
+            ### 5
+            **合规证明**
+
+            Technical documentation
+            """
+        )
+
+
+st.caption(
+    "PPWR → 包装类型 → 再生含量目标 → 材料来源 → 合规要求"
+)
+
+
+# ============================================================
+# 10. 时间线
+# ============================================================
+
+st.subheader("⑥ 关键时间节点")
+
+
+for event in article["timeline"]:
+
+    date_col, event_col = st.columns(
+        [1, 4]
+    )
+
+    with date_col:
+
+        st.markdown(
+            f'**{event["date"]}**'
+        )
+
+    with event_col:
+
+        st.write(
+            event["title"]
+        )
+
+
+# ============================================================
+# 11. Pending Rules
+# ============================================================
+
+st.subheader("⑦ 尚待落地的规则")
+
+
+for rule in article["pending_rules"]:
+
+    with st.expander(
+        f'{rule["item"]} · {rule["basis"]}'
+    ):
+
+        st.write(
+            f'截止日期：{rule["date"]}'
+        )
+
+        st.write(
+            f'数据库状态：{rule["status"]}'
+        )
+
+
+# ============================================================
+# 12. Action Checklist
+# ============================================================
+
+st.subheader("⑧ Action Checklist")
+
+st.caption(
+    "将政策要求转换为实际准备事项。当前版本为政策研究工具，不替代法律意见。"
+)
+
+
+actions = list(
+    article["actions"]["general"]
+)
+
+
+if source_key == "third_country":
+
+    actions += article["actions"]["third_country"]
+
+
+for index, action in enumerate(actions):
+
+    st.checkbox(
+        action,
+        key=f"action_{index}_{source_key}"
+    )
+
+
+# ============================================================
+# 13. 法律依据
+# ============================================================
+
+with st.expander(
+    "查看法律依据与数据说明"
 ):
-    with column:
-        st.markdown(f'<div class="path-step"><div class="path-number">{number}</div><h3>{title}</h3><p>{description}</p></div>', unsafe_allow_html=True)
-st.markdown('</div>', unsafe_allow_html=True)
+
+    st.write(
+        f'法规：{policy["full_name"]}'
+    )
+
+    st.write(
+        f'CELEX：{policy["celex"]}'
+    )
+
+    st.write(
+        f'分析条款：{article["article"]}'
+    )
+
+    st.write(
+        f'数据更新时间：{policy["status_as_of"]}'
+    )
+
+    st.write(
+        "当前原型聚焦PPWR Article 7。"
+        "后续实施法案出台后，需要同步更新数据库。"
+    )
+
+
+st.divider()
+
+st.caption(
+    "Circular Policy Navigator · PPWR Prototype v0.2"
+)
