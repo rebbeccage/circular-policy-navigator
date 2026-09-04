@@ -8,27 +8,26 @@ policy:
   entry_into_force: "2025-02-11"
   application_date: "2026-08-12"
 
-  status: "In force and applicable"
+  status: "Applicable"
   status_as_of: "2026-09-04"
 
 
 article_7:
 
   article: "Article 7"
-
   title_en: "Minimum recycled content in plastic packaging"
   title_cn: "塑料包装最低再生含量"
 
   core_message: >
-    塑料包装中的塑料部分须逐步达到最低消费后再生塑料含量要求。
-    核算按包装类型和形式，并以每个生产厂、每年度平均值为基础。
+    塑料包装中的塑料部分须达到最低消费后再生塑料含量要求。
+    目标按包装类型和形式区分，并以每个生产厂、每年度平均值计算。
 
 
   categories:
 
     contact_sensitive_pet:
       label: "接触敏感型PET包装"
-      note: "PET为主要成分；不含一次性塑料饮料瓶"
+      note: "PET为主要成分；不包括一次性塑料饮料瓶"
       target_2030: 30
       target_2040: 50
       basis_2030: "Article 7(1)(a)"
@@ -36,7 +35,7 @@ article_7:
 
     contact_sensitive_non_pet:
       label: "接触敏感型非PET塑料包装"
-      note: "不含一次性塑料饮料瓶"
+      note: "不包括一次性塑料饮料瓶"
       target_2030: 10
       target_2040: 25
       basis_2030: "Article 7(1)(b)"
@@ -59,10 +58,53 @@ article_7:
       basis_2040: "Article 7(2)(d)"
 
 
+  exemptions:
+
+    none:
+      label: "不属于以下特殊情形"
+      exempt: false
+      basis: ""
+
+    medicinal_immediate:
+      label: "药品直接包装"
+      exempt: true
+      basis: "Article 7(4)(a)"
+
+    medical_device:
+      label: "医疗器械接触敏感型塑料包装"
+      exempt: true
+      basis: "Article 7(4)(b)-(c)"
+
+    medicinal_outer:
+      label: "为保证药品质量所必需的外包装"
+      exempt: true
+      basis: "Article 7(4)(d)"
+
+    compostable:
+      label: "可堆肥塑料包装"
+      exempt: true
+      basis: "Article 7(4)(e)"
+
+    dangerous_goods:
+      label: "危险品运输包装"
+      exempt: true
+      basis: "Article 7(4)(f)"
+
+    infant_special_food:
+      label: "法规规定的婴幼儿及特殊医疗用途食品接触包装"
+      exempt: true
+      basis: "Article 7(4)(g)"
+
+    medicinal_supply:
+      label: "法规规定的药品生产相关供应/组件包装"
+      exempt: true
+      basis: "Article 7(4)(h)"
+
+
   calculation:
 
     material:
-      "消费后塑料废物产生的再生塑料"
+      "来自消费后塑料废物的再生塑料"
 
     basis:
       "按包装类型和形式，以每个生产厂、每年度平均值计算"
@@ -71,7 +113,13 @@ article_7:
       "制造商或进口商"
 
     evidence:
-      "通过Annex VII所述包装技术资料证明符合要求"
+      "制造商或进口商应通过Annex VII所述技术资料证明符合Article 7(1)和7(2)"
+
+    target_date_2030:
+      "2030年1月1日，或Article 7(8)实施法案生效后3年，以较晚者为准"
+
+    methodology_date:
+      "2029年1月1日，或Article 7(8)实施法案生效后24个月，以较晚者为准"
 
 
   source_routes:
@@ -80,88 +128,77 @@ article_7:
       label: "欧盟境内收集 / 再生"
 
       summary: >
-        再生含量原则上应来自符合欧盟相关规则收集的消费后塑料废物，
-        并满足Article 7规定的相关再生条件。
+        消费后塑料废物须按照PPWR或相关欧盟废物规则进行收集；
+        适用情况下，再生设施还须满足相关环境绩效要求。
 
       conditions:
-        - "确认材料属于消费后塑料废物来源"
-        - "确认收集环节符合适用的欧盟规则"
-        - "确认再生环节满足适用的环境要求"
-        - "保存支持再生含量核算的技术资料"
+        - "确认材料来自消费后塑料废物"
+        - "确认收集路径符合适用的欧盟规则"
+        - "确认适用的再生设施环境要求"
+        - "保留支持再生含量计算和核验的技术资料"
 
 
     third_country:
       label: "第三国收集 / 再生"
 
       summary: >
-        第三国来源材料可以纳入，但其收集和再生条件需要满足与欧盟相关要求等效的标准，
-        并受后续欧盟等效性评估、核验和认证方法约束。
+        第三国来源再生塑料可以用于Article 7核算，但收集和再生条件需要达到
+        与欧盟相关要求等效的标准，并适用后续等效性评估、核验和认证方法。
 
       conditions:
-        - "收集体系需达到促进高质量再生的等效标准"
-        - "适用情况下，再生设施环境要求需与欧盟相关要求等效"
-        - "需关注第三国等效性评估、核验和认证方法"
-        - "为后续第三方审核和证明材料要求预留数据基础"
+        - "分类收集标准须促进高质量再生，并与欧盟相关要求等效"
+        - "适用情况下，再生设施的排放及环境绩效规则须达到欧盟等效水平"
+        - "再生技术需满足与欧盟可持续性标准等效的要求"
+        - "等效性方法将涵盖评估、核验、认证及第三方审核"
 
 
-  pending_rules:
+  dependencies:
 
     - date: "2026-12-31"
-      item: "再生含量计算与核验方法"
+      title: "计算与核验方法"
+      instrument: "Implementing Act"
       basis: "Article 7(8)"
-      status: "Pending"
+      description: "制定再生含量计算与核验方法，并规定Annex VII技术文件格式"
 
     - date: "2026-12-31"
-      item: "塑料再生技术可持续性标准"
+      title: "再生技术可持续性标准"
+      instrument: "Delegated Act"
       basis: "Article 7(9)"
-      status: "Pending"
+      description: "建立塑料再生技术的可持续性标准"
 
     - date: "2026-12-31"
-      item: "第三国规则等效性的评估、核验和认证方法"
+      title: "第三国等效性方法"
+      instrument: "Implementing Act"
       basis: "Article 7(10)"
-      status: "Pending"
+      description: "建立第三国规则的评估、核验和认证方法，包括第三方审核"
+
+    - date: "2028-01-01"
+      title: "特定包装豁免评估"
+      instrument: "Commission Assessment"
+      basis: "Article 7(12)"
+      description: "评估Article 7(1)(b)和(d)部分包装是否需要豁免或调整"
+
+    - date: "Conditional"
+      title: "统一方法强制适用"
+      instrument: "Implementation"
+      basis: "Article 7(11)"
+      description: "2029年1月1日或Article 7(8)实施法案生效24个月后，以较晚者为准"
+
+    - date: "2032-02-12"
+      title: "2030目标执行审查"
+      instrument: "Commission Review"
+      basis: "Article 7(14)"
+      description: "审查2030目标执行效果和2040目标可行性"
 
 
-  timeline:
-
-    - date: "2025-02-11"
-      title: "PPWR生效"
-      type: "Regulation"
-
-    - date: "2026-08-12"
-      title: "PPWR开始适用"
-      type: "Application"
-
-    - date: "2026-12-31"
-      title: "Article 7关键实施方法截止日期"
-      type: "Methodology"
-
-    - date: "2030-01-01"
-      title: "第一阶段最低再生含量目标"
-      type: "Target"
-
-    - date: "2035-01-01"
-      title: "欧委会审查Article 7相关例外"
-      type: "Review"
-
-    - date: "2040-01-01"
-      title: "第二阶段最低再生含量目标"
-      type: "Target"
-
-
-  actions:
+  technical_documentation:
 
     general:
-      - "确认包装是否属于Article 7适用范围"
-      - "确认包装所属的四类再生含量目标"
-      - "明确生产厂作为核算边界"
-      - "建立年度再生含量数据"
-      - "准备Annex VII相关技术资料"
+      - "包装及预期用途的一般描述"
+      - "设计、制造图纸及组成材料"
+      - "相关标准、共同规范或技术规范"
+      - "必要的测试报告"
+      - "适用要求及不合规风险分析"
 
-    third_country:
-      - "记录消费后塑料废物的来源和收集路径"
-      - "准备收集体系等效性相关证明"
-      - "准备再生设施和环境绩效相关资料"
-      - "持续跟踪Article 7(10)第三国等效性实施方法"
-      - "为第三方审核保留可追溯数据和证据"
-      
+    article_7_note:
+      "Article 7(8)还要求欧委会进一步规定再生含量核算和核验相关技术文件格式。"
