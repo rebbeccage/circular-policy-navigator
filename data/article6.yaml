@@ -1,0 +1,178 @@
+article_6:
+
+  article: "Article 6"
+
+  title_cn: "包装可回收性"
+  title_en: "Recyclable packaging"
+
+  user_question:
+    "我的包装2030年以后还能否被认定为可回收并投放欧盟市场？"
+
+  core_message: >
+    所有投放欧盟市场的包装原则上都必须可回收。
+    PPWR将可回收性分为两个核心层次：
+    Design for Recycling，以及包装成为废弃物后能够被分类收集、
+    分选并实现规模化再生。
+
+
+  stages:
+
+    current:
+      label: "当前规则状态"
+      headline: "具体A/B/C等级尚不能仅根据PPWR正文最终判定"
+      requirement: >
+        Article 6已经确定总体法律框架，
+        但具体Design for Recycling标准、
+        等级评估规则以及recycled-at-scale方法仍依赖后续法案。
+      basis: "Article 6(4)–(5)"
+
+    2030:
+      label: "2030市场准入"
+      headline: "原则上需要达到A、B或C级"
+      requirement: >
+        包装须满足Design for Recycling要求，
+        并达到A、B或C可回收性能等级，
+        具体适用时间受Article 6(4)授权法案生效时间影响。
+      basis: "Article 6(2)–(4)"
+
+    2035:
+      label: "2035市场准入"
+      headline: "DfR + A/B/C + recycled-at-scale"
+      requirement: >
+        除设计可回收要求和A/B/C等级外，
+        recycled-at-scale要求也开始进入市场准入逻辑，
+        具体时间受Article 6(5)实施法案生效时间影响。
+      basis: "Article 6(2)–(5)"
+
+    2038:
+      label: "2038市场准入"
+      headline: "仅A或B级包装可投放市场"
+      requirement: >
+        从2038年1月1日起，
+        包装原则上必须达到A或B级；
+        C级包装不再满足市场准入要求。
+      basis: "Article 6(3)"
+
+
+  exemptions:
+
+    none:
+      label: "不属于以下特殊情形"
+      exempt: false
+      partial: false
+      basis: ""
+
+    medicinal_immediate:
+      label: "药品直接包装"
+      exempt: true
+      partial: false
+      basis: "Article 6(11)(a)"
+
+    medical_device:
+      label: "医疗器械接触敏感型包装"
+      exempt: true
+      partial: false
+      basis: "Article 6(11)(b)"
+
+    ivd:
+      label: "体外诊断医疗器械接触敏感型包装"
+      exempt: true
+      partial: false
+      basis: "Article 6(11)(c)"
+
+    medicinal_outer:
+      label: "为保证药品质量所必需的外包装"
+      exempt: true
+      partial: false
+      basis: "Article 6(11)(d)"
+
+    infant_special_food:
+      label: "法规列明的婴幼儿及特殊医疗用途食品接触包装"
+      exempt: true
+      partial: false
+      basis: "Article 6(11)(e)"
+
+    dangerous_goods:
+      label: "危险品运输包装"
+      exempt: true
+      partial: false
+      basis: "Article 6(11)(f)"
+
+    special_material_sales:
+      label: "轻质木材、软木、纺织、橡胶、陶瓷、瓷器或蜡制销售包装"
+      exempt: true
+      partial: true
+      basis: "Article 6(11)(g)"
+
+
+  innovative_packaging:
+
+    basis: "Article 6(10)"
+
+    summary: >
+      自2030年起，符合创新包装条件但尚不满足Article 6(2)要求的包装，
+      在履行通知和技术证明等条件下，
+      可在首次投放市场所在日历年结束后最长5年内继续投放市场。
+
+    conditions:
+      - "投放市场前通知主管机关"
+      - "提交证明包装具有创新性的技术资料"
+      - "提交达到recycled-at-scale要求的时间表"
+      - "主管机关可判断其是否真正属于创新包装"
+
+
+  dependencies:
+
+    - date: "2028-01-01"
+      title: "Design for Recycling标准"
+      instrument: "Delegated Act"
+      basis: "Article 6(4)"
+      description: >
+        制定不同包装类别的DfR标准、
+        recyclability performance grades以及评估方式。
+
+    - date: "2030-01-01"
+      title: "Recycled-at-scale方法"
+      instrument: "Implementing Act"
+      basis: "Article 6(5)"
+      description: >
+        建立recycled-at-scale评估方法、
+        阈值以及chain of custody机制。
+
+    - date: "2030 / conditional"
+      title: "A/B/C市场准入"
+      instrument: "Market access"
+      basis: "Article 6(3)"
+      description: >
+        自2030年1月1日或Article 6(4)授权法案生效24个月后，
+        以较晚者为准，包装须达到A、B或C级。
+
+    - date: "2035 / conditional"
+      title: "Recycled-at-scale（规模化的回收）进入准入"
+      instrument: "Market access"
+      basis: "Article 6(2)"
+      description: >
+        2035年或Article 6(5)实施法案生效5年后，
+        以较晚者为准，recycled-at-scale要求开始适用。
+
+    - date: "2038-01-01"
+      title: "C级退出市场"
+      instrument: "Market access"
+      basis: "Article 6(3)"
+      description: >
+        从2038年起，仅达到A或B级的包装可投放市场。
+
+
+  evidence:
+
+    general:
+      - "包装及其组成材料和组件信息"
+      - "Annex VII技术文件"
+      - "Design for Recycling（为回收的设计）评估资料"
+      - "包装组件与现有收集、分选和再生流程兼容性资料"
+
+    recycled_at_scale:
+      - "相关包装废弃物收集量数据"
+      - "送往分选及再生设施的数量资料"
+      - "下游运营商提供的再生数据"
+      - "支持产销监管链和核验的数据链"

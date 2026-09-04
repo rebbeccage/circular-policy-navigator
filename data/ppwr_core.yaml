@@ -1,0 +1,543 @@
+catalog:
+  policy: "Regulation (EU) 2025/40"
+  short_name: "PPWR"
+  updated: "2026-09-04"
+  description: "Structured catalogue of selected core PPWR provisions"
+
+
+articles:
+
+  - id: "article_5"
+    article: "Article 5"
+    title_cn: "包装中物质要求"
+    title_en: "Requirements for substances in packaging"
+    theme: "材料与安全"
+    actors:
+      - "制造商"
+      - "进口商"
+    status: "现行要求 + 后续评估"
+    source_pages: "38–39"
+    keywords:
+      - "substances of concern"
+      - "chemicals"
+      - "PFAS"
+      - "heavy metals"
+      - "有害物质"
+      - "化学品"
+    summary: "要求包装材料及组件中关注物质的存在和浓度最小化，并建立后续监测和评估机制。"
+    key_points:
+      - "包装设计和制造应尽量减少关注物质的存在和浓度"
+      - "同时考虑废弃物管理和再生材料中的相关影响"
+      - "欧委会将持续评估关注物质对再利用、再生和化学安全的影响"
+    dates:
+      - date: "2026-12-31"
+        event: "欧委会提交包装中关注物质报告"
+      - date: "2033-08-12"
+        event: "评估Article 5与Article 6设计再生标准的实施效果"
+    evidence:
+      - "适用情况下的Annex VII技术文件"
+      - "材料组成及物质相关检测资料"
+    related:
+      - "Article 6"
+      - "Annex VII"
+
+
+  - id: "article_6"
+    article: "Article 6"
+    title_cn: "包装可回收性"
+    title_en: "Recyclable packaging"
+    theme: "循环设计与再生"
+    actors:
+      - "制造商"
+    status: "核心义务已确定 · 方法学待落地"
+    source_pages: "39–42"
+    keywords:
+      - "recyclability"
+      - "design for recycling"
+      - "recycled at scale"
+      - "A B C"
+      - "可回收性"
+      - "规模化再生"
+      - "生态设计"
+    summary: "所有投放欧盟市场的包装须可回收；可回收性由“为材料再生而设计”和“实际可规模化再生”两个层次共同构成。"
+    key_points:
+      - "第一层：Design for Recycling"
+      - "第二层：当包装成为废弃物后可分类收集、分选并实现规模化再生"
+      - "可回收性能以A、B、C等级表示"
+      - "2038年起，仅A/B级包装可投放市场"
+      - "Article 6(5)进一步建立recycled-at-scale方法和chain of custody机制"
+    dates:
+      - date: "2028-01-01"
+        event: "欧委会制定Design for Recycling标准和性能等级"
+      - date: "2030 / conditional"
+        event: "A/B/C等级要求开始适用"
+      - date: "2030-01-01"
+        event: "制定recycled-at-scale评估方法和chain of custody机制"
+      - date: "2035 / conditional"
+        event: "Recycled-at-scale要求开始适用"
+      - date: "2038-01-01"
+        event: "仅A/B级包装可投放市场"
+    evidence:
+      - "Annex VII技术文件"
+      - "包装材料和组件信息"
+      - "Design for Recycling评估"
+      - "后续recycled-at-scale数据和chain of custody资料"
+    related:
+      - "Article 5"
+      - "Article 7"
+      - "Article 45"
+      - "Annex II"
+      - "Annex VII"
+
+
+  - id: "article_7"
+    article: "Article 7"
+    title_cn: "塑料包装最低再生含量"
+    title_en: "Minimum recycled content in plastic packaging"
+    theme: "循环设计与再生"
+    actors:
+      - "制造商"
+      - "进口商"
+    status: "目标已确定 · 方法学待落地"
+    source_pages: "43–45"
+    keywords:
+      - "recycled content"
+      - "PCR"
+      - "post-consumer"
+      - "third country"
+      - "再生含量"
+      - "消费后"
+      - "第三国"
+    summary: "按照包装类型和形式规定塑料包装2030和2040最低消费后再生塑料含量，并对第三国材料提出等效要求。"
+    key_points:
+      - "四类塑料包装适用不同2030和2040目标"
+      - "按包装类型和形式，以每个生产厂、每年度平均值核算"
+      - "仅消费后塑料废物来源再生塑料计入"
+      - "第三国收集和再生条件须符合等效要求"
+    dates:
+      - date: "2026-12-31"
+        event: "计算与核验、再生技术和第三国等效方法截止日期"
+      - date: "2030 / conditional"
+        event: "第一阶段最低再生含量要求"
+      - date: "2040-01-01"
+        event: "第二阶段最低再生含量要求"
+    evidence:
+      - "再生含量核算资料"
+      - "Annex VII技术文件"
+      - "消费后来源证明"
+      - "第三国来源等效性相关证据"
+    related:
+      - "Article 6"
+      - "Article 12"
+      - "Annex VII"
+    deep_analyzer: true
+
+
+  - id: "article_8"
+    article: "Article 8"
+    title_cn: "塑料包装生物基原料"
+    title_en: "Biobased feedstock in plastic packaging"
+    theme: "材料替代"
+    actors:
+      - "欧盟委员会"
+      - "经济运营商"
+    status: "评估与潜在后续立法"
+    source_pages: "45–46"
+    keywords:
+      - "biobased"
+      - "bio-based"
+      - "生物基"
+      - "替代材料"
+    summary: "要求欧委会评估生物基塑料包装的技术发展和环境绩效，并视情况提出可持续性要求、目标或与Article 7衔接的立法建议。"
+    key_points:
+      - "Article 8本身不是现阶段统一的生物基含量强制目标"
+      - "重点是技术和环境绩效评估"
+      - "未来可能建立生物基原料可持续性要求和目标"
+    dates:
+      - date: "2028-02-12"
+        event: "欧委会完成生物基塑料包装技术与环境绩效审查"
+    evidence:
+      - "技术发展和环境绩效信息"
+    related:
+      - "Article 7"
+
+
+  - id: "article_9"
+    article: "Article 9"
+    title_cn: "可堆肥包装"
+    title_en: "Compostable packaging"
+    theme: "材料替代"
+    actors:
+      - "制造商"
+      - "经济运营商"
+    status: "要求已确定"
+    source_pages: "46"
+    keywords:
+      - "compostable"
+      - "biodegradable"
+      - "composting"
+      - "可堆肥"
+      - "可降解"
+    summary: "仅特定包装场景进入可堆肥路径；其他包括生物降解塑料在内的包装原则上仍应按照Article 6设计用于材料再生。"
+    key_points:
+      - "部分茶、咖啡等单份包装和果蔬粘贴标签适用工业堆肥要求"
+      - "成员国在特定条件下可对部分包装提出可堆肥要求"
+      - "其他包装原则上仍应设计用于材料再生"
+    dates:
+      - date: "2028-02-12"
+        event: "Article 9相关可堆肥/材料再生要求节点"
+    evidence:
+      - "Annex VII技术信息"
+      - "适用堆肥标准符合性资料"
+    related:
+      - "Article 6"
+      - "Annex VII"
+
+
+  - id: "article_10"
+    article: "Article 10"
+    title_cn: "包装减量"
+    title_en: "Packaging minimisation"
+    theme: "源头减量"
+    actors:
+      - "制造商"
+      - "进口商"
+    status: "2030强制要求"
+    source_pages: "47"
+    keywords:
+      - "minimisation"
+      - "weight"
+      - "volume"
+      - "empty space"
+      - "包装减量"
+      - "重量"
+      - "体积"
+    summary: "要求包装重量和体积减少至确保功能所必需的最低水平，并禁止仅为增加视觉体积而设置的不必要结构。"
+    key_points:
+      - "包装重量和体积须降至功能所需最低水平"
+      - "双层壁、假底和不必要层等设计受到限制"
+      - "依据Annex IV性能标准开展评估"
+    dates:
+      - date: "2027-02-12"
+        event: "欧委会要求制定或更新包装减量协调标准"
+      - date: "2030-01-01"
+        event: "包装减量要求适用"
+    evidence:
+      - "Annex VII技术文件"
+      - "Annex IV性能标准评估"
+      - "测试、研究、建模或模拟结果"
+    related:
+      - "Article 11"
+      - "Annex IV"
+      - "Annex VII"
+
+
+  - id: "article_11"
+    article: "Article 11"
+    title_cn: "可复用包装"
+    title_en: "Reusable packaging"
+    theme: "复用与补充装"
+    actors:
+      - "制造商"
+      - "经济运营商"
+    status: "资格标准已确定"
+    source_pages: "47–48"
+    keywords:
+      - "reusable"
+      - "rotation"
+      - "reuse"
+      - "可复用"
+      - "周转"
+    summary: "明确包装被认定为可复用包装需要满足的设计、周转、安全、再处理和最终可回收等条件。"
+    key_points:
+      - "须以多次重复使用为设计目标"
+      - "须能够完成尽可能多的周转"
+      - "须满足健康、安全和卫生要求"
+      - "须能够进行reconditioning"
+      - "最终成为废弃物时还须满足Article 6可回收要求"
+    dates:
+      - date: "2027-02-12"
+        event: "欧委会制定常用可复用包装最低周转次数"
+    evidence:
+      - "Annex VII技术信息"
+      - "设计及周转能力证明"
+    related:
+      - "Article 6"
+      - "Article 29"
+      - "Annex VI"
+
+
+  - id: "article_12"
+    article: "Article 12"
+    title_cn: "包装标签"
+    title_en: "Labelling of packaging"
+    theme: "标签与信息"
+    actors:
+      - "经济运营商"
+    status: "统一规则 · 实施细则待落地"
+    source_pages: "48–50"
+    keywords:
+      - "label"
+      - "QR"
+      - "digital"
+      - "material composition"
+      - "标签"
+      - "二维码"
+      - "数字化"
+    summary: "建立统一包装材料组成标签及数字信息载体规则，并对可复用、再生含量和押金返还包装建立相应标识要求。"
+    key_points:
+      - "统一材料组成标签"
+      - "可使用QR码或标准化开放数字载体"
+      - "可复用包装适用专门标签和数字信息要求"
+      - "如标注再生含量，应依据Article 7(8)核算方法"
+    dates:
+      - date: "2026-08-12"
+        event: "统一标签及材料组成识别实施法案截止日期"
+      - date: "2028 / conditional"
+        event: "统一材料组成标签开始适用"
+      - date: "2029 / conditional"
+        event: "可复用包装标签要求开始适用"
+    evidence:
+      - "包装材料组成信息"
+      - "适用标签和数字信息载体"
+    related:
+      - "Article 7"
+      - "Article 11"
+      - "Article 50"
+
+
+  - id: "article_28"
+    article: "Article 28"
+    title_cn: "补充装义务"
+    title_en: "Obligations related to refill"
+    theme: "复用与补充装"
+    actors:
+      - "提供refill的经济运营商"
+      - "最终分销商"
+    status: "要求已确定"
+    source_pages: "58"
+    keywords:
+      - "refill"
+      - "refill station"
+      - "补充装"
+      - "散装"
+    summary: "规定refill经营者的信息、卫生和设施要求，并对大型最终分销商设置2030 refill station引导目标。"
+    key_points:
+      - "告知消费者可使用容器类型和卫生规则"
+      - "refill station须满足Annex VI要求"
+      - "经营者可拒绝不卫生或不适用的消费者自带容器"
+    dates:
+      - date: "2030-01-01"
+        event: "销售面积超过400 m²的最终分销商应努力将10%面积用于食品及非食品refill stations"
+    evidence:
+      - "Refill rules"
+      - "卫生及安全操作要求"
+    related:
+      - "Article 29"
+      - "Annex VI"
+
+
+  - id: "article_29"
+    article: "Article 29"
+    title_cn: "复用目标"
+    title_en: "Re-use targets"
+    theme: "复用与补充装"
+    actors:
+      - "经济运营商"
+      - "最终分销商"
+    status: "2030强制目标 + 2040努力目标"
+    source_pages: "58–61"
+    keywords:
+      - "reuse target"
+      - "transport packaging"
+      - "beverage"
+      - "grouped packaging"
+      - "复用目标"
+      - "运输包装"
+      - "饮料"
+    summary: "针对运输包装、组合包装和部分饮料销售包装分别建立2030复用目标，并设置2040进一步提升目标。"
+    key_points:
+      - "部分运输包装2030年达到至少40%可复用"
+      - "特定企业内部或同一成员国B2B运输包装适用更严格的可复用要求"
+      - "特定组合包装2030目标10%"
+      - "部分酒精和非酒精饮料销售包装2030目标10%"
+      - "存在产品、企业规模和成员国层面的多项豁免"
+    dates:
+      - date: "2030-01-01"
+        event: "Article 29主要复用目标开始适用"
+      - date: "2040-01-01"
+        event: "更高的努力目标节点"
+    evidence:
+      - "年度包装使用量"
+      - "可复用包装比例"
+      - "re-use system运行数据"
+    related:
+      - "Article 11"
+      - "Article 28"
+      - "Article 43"
+
+
+  - id: "article_43"
+    article: "Article 43"
+    title_cn: "包装废弃物预防"
+    title_en: "Prevention of packaging waste"
+    theme: "废弃物管理"
+    actors:
+      - "成员国"
+    status: "成员国约束目标"
+    source_pages: "67–68"
+    keywords:
+      - "waste prevention"
+      - "reduction"
+      - "packaging waste"
+      - "废弃物预防"
+      - "减量"
+    summary: "以2018年人均包装废弃物产生量为基准，规定成员国2030、2035和2040减量目标。"
+    key_points:
+      - "2030：至少减少5%"
+      - "2035：至少减少10%"
+      - "2040：至少减少15%"
+      - "成员国应特别努力减少塑料包装废弃物"
+    dates:
+      - date: "2030"
+        event: "较2018年人均包装废弃物至少减少5%"
+      - date: "2035"
+        event: "至少减少10%"
+      - date: "2040"
+        event: "至少减少15%"
+    evidence:
+      - "成员国包装废弃物统计数据"
+    related:
+      - "Article 29"
+      - "Article 45"
+      - "Article 52"
+
+
+  - id: "article_44"
+    article: "Article 44"
+    title_cn: "生产者登记"
+    title_en: "Register of producers"
+    theme: "生产者责任"
+    actors:
+      - "生产者"
+      - "成员国"
+    status: "登记和报告制度"
+    source_pages: "69–70"
+    keywords:
+      - "producer register"
+      - "registration"
+      - "reporting"
+      - "生产者登记"
+      - "报告"
+    summary: "要求生产者在其首次投放包装或包装产品的相关成员国登记，并履行相应报告义务。"
+    key_points:
+      - "每个相关成员国建立生产者登记"
+      - "未依法登记原则上不得首次投放相关包装或包装产品"
+      - "年度数据和报告义务适用不同颗粒度要求"
+    dates:
+      - date: "2026-02-12"
+        event: "欧委会制定登记和报告格式实施法案"
+    evidence:
+      - "生产者信息"
+      - "包装类型和材料类别数据"
+      - "年度报告"
+    related:
+      - "Article 45"
+      - "Annex IX"
+
+
+  - id: "article_45"
+    article: "Article 45"
+    title_cn: "生产者延伸责任"
+    title_en: "Extended producer responsibility"
+    theme: "生产者责任"
+    actors:
+      - "生产者"
+      - "在线平台"
+    status: "EPR核心义务"
+    source_pages: "71"
+    keywords:
+      - "EPR"
+      - "extended producer responsibility"
+      - "producer responsibility"
+      - "生产者责任"
+    summary: "规定包装生产者延伸责任以及相关费用、授权代表和线上平台信息核验要求。"
+    key_points:
+      - "生产者对其首次投放相关成员国市场的包装承担EPR"
+      - "EPR费用覆盖PPWR规定的额外成本"
+      - "跨成员国和第三国生产者可能涉及授权代表要求"
+      - "在线平台需获取生产者登记等相关信息"
+    dates: []
+    evidence:
+      - "生产者登记信息"
+      - "EPR履约信息"
+      - "适用授权代表资料"
+    related:
+      - "Article 44"
+      - "Article 6"
+
+
+  - id: "article_50"
+    article: "Article 50"
+    title_cn: "押金返还系统"
+    title_en: "Deposit and return systems"
+    theme: "收集与回收"
+    actors:
+      - "成员国"
+      - "经济运营商"
+    status: "2029收集目标"
+    source_pages: "75–76"
+    keywords:
+      - "DRS"
+      - "deposit return"
+      - "beverage bottle"
+      - "separate collection"
+      - "押金返还"
+      - "饮料瓶"
+    summary: "针对不超过3升的一次性塑料饮料瓶和金属饮料容器建立90%分类收集目标，并原则上要求建立押金返还系统。"
+    key_points:
+      - "目标覆盖≤3 L的一次性塑料饮料瓶"
+      - "同时覆盖≤3 L的一次性金属饮料容器"
+      - "原则上通过DRS实现目标"
+      - "存在特定产品和成员国条件下的豁免机制"
+    dates:
+      - date: "2029-01-01"
+        event: "年度分类收集率至少90%"
+    evidence:
+      - "市场投放量"
+      - "分类收集量"
+      - "DRS运行数据"
+    related:
+      - "Article 12"
+      - "Article 49"
+      - "Article 52"
+
+
+  - id: "article_52"
+    article: "Article 52"
+    title_cn: "包装回收目标"
+    title_en: "Recycling targets and promotion of recycling"
+    theme: "收集与回收"
+    actors:
+      - "成员国"
+    status: "成员国回收目标"
+    source_pages: "77+"
+    keywords:
+      - "recycling target"
+      - "plastic recycling"
+      - "packaging waste"
+      - "回收目标"
+      - "塑料回收"
+    summary: "规定成员国包装废弃物整体及分材料回收目标；2030年整体包装废弃物回收率目标为70%。"
+    key_points:
+      - "2030整体包装废弃物回收率至少70%"
+      - "2030塑料包装废弃物回收率至少55%"
+      - "2030木材30%、黑色金属80%、铝60%、玻璃75%、纸和纸板85%"
+    dates:
+      - date: "2030-12-31"
+        event: "2030包装废弃物回收目标截止"
+    evidence:
+      - "成员国包装废弃物回收统计"
+    related:
+      - "Article 43"
+      - "Article 50"
