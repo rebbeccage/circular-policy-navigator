@@ -26,7 +26,7 @@ article_6:
         等级评估规则以及recycled-at-scale方法仍依赖后续法案。
       basis: "Article 6(4)–(5)"
 
-    2030:
+    "2030":
       label: "2030市场准入"
       headline: "原则上需要达到A、B或C级"
       requirement: >
@@ -35,7 +35,7 @@ article_6:
         具体适用时间受Article 6(4)授权法案生效时间影响。
       basis: "Article 6(2)–(4)"
 
-    2035:
+    "2035":
       label: "2035市场准入"
       headline: "DfR + A/B/C + recycled-at-scale"
       requirement: >
@@ -44,7 +44,7 @@ article_6:
         具体时间受Article 6(5)实施法案生效时间影响。
       basis: "Article 6(2)–(5)"
 
-    2038:
+    "2038":
       label: "2038市场准入"
       headline: "仅A或B级包装可投放市场"
       requirement: >

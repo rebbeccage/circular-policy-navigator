@@ -7,8 +7,641 @@ st.set_page_config(
     page_title="PPWR 核心政策导航",
     layout="wide"
 )
+import re
 
 
+# =========================================================
+# QUICK FIND
+# 用户不需要知道 Article 编号，也可以直接搜索自己的问题
+# =========================================================
+
+SEARCH_ALIASES = {
+    "可回收": [
+        "可回收", "可回收性", "回收设计", "设计可回收",
+        "recyclable", "recyclability", "design for recycling", "dfr",
+        "a级", "b级", "c级"
+    ],
+    "再生含量": [
+        "再生含量", "再生塑料", "再生料", "再生材料",
+        "pcr", "recycled content", "recycled plastic",
+        "再生塑料比例"
+    ],
+    "第三国": [
+        "第三国", "欧盟以外", "进口再生料", "中国再生料",
+        "third country", "third-country", "equivalence", "等效"
+    ],
+    "包装减量": [
+        "包装减量", "减量", "过度包装", "包装重量",
+        "包装体积", "空隙率", "minimisation", "minimization"
+    ],
+    "复用": [
+        "复用", "重复使用", "可重复使用", "reuse", "re-use",
+        "refill", "补充装", "重新灌装"
+    ],
+    "标签": [
+        "标签", "标识", "二维码", "label", "labelling",
+        "labeling", "qr"
+    ],
+    "生产者责任": [
+        "生产者责任", "epr", "延伸生产者责任",
+        "producer responsibility", "生产者责任组织"
+    ],
+    "押金返还": [
+        "押金返还", "押金制", "drs", "deposit return",
+        "deposit and return"
+    ],
+    "可堆肥": [
+        "可堆肥", "生物降解", "compostable", "composting"
+    ],
+}
+
+
+def normalize_search_text(value):
+    """把不同字段统一变成可搜索文本。"""
+    if value is None:
+        return ""
+
+    if isinstance(value, list):
+        return " ".join(normalize_search_text(x) for x in value)
+
+    if isinstance(value, dict):
+        return " ".join(
+            f"{normalize_search_text(k)} {normalize_search_text(v)}"
+            for k, v in value.items()
+        )
+
+    return str(value)
+
+
+def expand_query(query):
+    """
+    把用户的自然语言扩展成相关政策关键词。
+    例如搜索“中国再生料”，同时帮助匹配“第三国、equivalence”等。
+    """
+    query_lower = query.lower().strip()
+
+    expanded = {query_lower}
+
+    for _, aliases in SEARCH_ALIASES.items():
+        aliases_lower = [x.lower() for x in aliases]
+
+        if any(
+            alias in query_lower or query_lower in alias
+            for alias in aliases_lower
+        ):
+            expanded.update(aliases_lower)
+
+    return expanded
+
+
+def search_articles(articles, query):
+    """
+    搜索 Article 编号、标题、主题、关键词、摘要、关键点、日期等字段。
+    返回匹配度较高的结果。
+    """
+    if not query.strip():
+        return []
+
+    query_terms = expand_query(query)
+    results = []
+
+    for article in articles:
+
+        searchable_parts = [
+            article.get("id"),
+            article.get("article"),
+            article.get("title_cn"),
+            article.get("title_en"),
+            article.get("theme"),
+            article.get("actors"),
+            article.get("status"),
+            article.get("keywords"),
+            article.get("summary"),
+            article.get("key_points"),
+            article.get("dates"),
+        ]
+
+        searchable_text = normalize_search_text(
+            searchable_parts
+        ).lower()
+
+        score = 0
+        matched_terms = []
+
+        for term in query_terms:
+            if term and term in searchable_text:
+                matched_terms.append(term)
+
+                # Article、标题、关键词匹配权重更高
+                headline_text = normalize_search_text(
+                    [
+                        article.get("article"),
+                        article.get("title_cn"),
+                        article.get("title_en"),
+                        article.get("keywords"),
+                    ]
+                ).lower()
+
+                if term in headline_text:
+                    score += 3
+                else:
+                    score += 1
+
+        # 支持直接输入 Article 6 / art 6 / 第6条
+        article_number = re.search(
+            r"(?:article|art\.?|第)?\s*(\d+)",
+            query.lower()
+        )
+
+        if article_number:
+            number = article_number.group(1)
+            article_label = str(article.get("article", "")).lower()
+
+            if number in article_label:
+                score += 8
+
+        if score > 0:
+            results.append(
+                {
+                    "article": article,
+                    "score": score,
+                    "matched_terms": matched_terms,
+                }
+            )
+
+    return sorted(
+        results,
+        key=lambda x: x["score"],
+        reverse=True
+    )
+# =========================================================
+# ANSWER CARD
+# 把“搜索结果”转换成普通用户更容易理解的答案
+# =========================================================
+
+USER_QUESTIONS = {
+    "art6": "我的包装未来还能否满足欧盟的可回收性要求？",
+    "art7": "我的塑料包装需要使用多少再生塑料？",
+    "art8": "生物基塑料未来会受到什么要求？",
+    "art9": "哪些包装可以或必须使用可堆肥材料？",
+    "art10": "我的包装是否需要进一步减量？",
+    "art11": "什么样的包装才能被认定为可重复使用？",
+    "art12": "我的包装未来需要使用什么标签？",
+    "art28": "哪些场景需要提供补充装或复用选择？",
+    "art29": "企业需要达到哪些包装复用目标？",
+    "art43": "谁需要承担生产者责任？",
+    "art44": "生产者需要在哪里登记？",
+    "art45": "生产者责任体系需要承担哪些义务？",
+    "art50": "哪些包装需要押金返还系统？",
+    "art52": "包装废弃物需要达到哪些回收目标？",
+}
+
+# =========================================================
+# ANSWER CARD HELPERS
+# =========================================================
+
+def get_article_key(article):
+    """
+    将 Article 6、art6 等格式统一成 art6。
+    """
+    raw_text = " ".join(
+        [
+            str(article.get("id", "")),
+            str(article.get("article", "")),
+        ]
+    )
+
+    numbers = re.findall(r"\d+", raw_text)
+
+    if numbers:
+        return f"art{numbers[0]}"
+
+    return ""
+
+
+def get_user_question(article):
+    """
+    把法规条款转换成普通用户真正会问的问题。
+    """
+    article_key = get_article_key(article)
+
+    questions = {
+        "art5": "包装中的化学物质和有害物质受到什么限制？",
+        "art6": "我的包装未来还能否满足欧盟的可回收性要求？",
+        "art7": "我的塑料包装需要使用多少再生塑料？",
+        "art8": "生物基塑料包装未来会有什么要求？",
+        "art9": "哪些包装可以或必须采用可堆肥设计？",
+        "art10": "我的包装是否需要进一步减少重量和体积？",
+        "art11": "什么样的包装才能被认定为可重复使用？",
+        "art12": "我的包装未来需要使用什么标签和标识？",
+        "art28": "哪些场景需要提供补充装或复用选择？",
+        "art29": "企业需要达到哪些包装复用目标？",
+        "art43": "谁需要承担生产者责任？",
+        "art44": "生产者需要完成哪些登记？",
+        "art45": "生产者责任体系具体要求企业做什么？",
+        "art50": "哪些包装需要进入押金返还系统？",
+        "art52": "包装废弃物需要达到哪些回收目标？",
+    }
+
+    return questions.get(
+        article_key,
+        "这条规则可能与你搜索的问题有关。"
+    )
+
+
+def short_text(value, max_length=180):
+    """
+    控制卡片中文字长度。
+    """
+    text = normalize_search_text(value).strip()
+
+    if not text:
+        return ""
+
+    if len(text) <= max_length:
+        return text
+
+    return text[:max_length].rstrip() + "……"
+
+
+def format_dates(article):
+    """
+    把 YAML 中的时间数据转成用户容易理解的形式。
+    """
+    dates = article.get("dates")
+
+    if not dates:
+        return []
+
+    formatted = []
+
+    if isinstance(dates, list):
+
+        for item in dates:
+
+            if isinstance(item, dict):
+
+                raw_date = str(
+                    item.get("date", "")
+                ).strip()
+
+                event = str(
+                    item.get(
+                        "event",
+                        item.get("description", "")
+                    )
+                ).strip()
+
+                year_match = re.search(
+                    r"20\d{2}",
+                    raw_date
+                )
+
+                if year_match:
+                    year = year_match.group()
+
+                    if "conditional" in raw_date.lower():
+                        display_date = f"{year} · 条件生效"
+                    else:
+                        display_date = year
+                else:
+                    display_date = raw_date
+
+                if display_date or event:
+                    formatted.append(
+                        {
+                            "date": display_date,
+                            "event": event,
+                        }
+                    )
+
+            else:
+                formatted.append(
+                    {
+                        "date": "",
+                        "event": str(item),
+                    }
+                )
+
+    elif isinstance(dates, dict):
+
+        for key, value in dates.items():
+            formatted.append(
+                {
+                    "date": str(key),
+                    "event": normalize_search_text(value),
+                }
+            )
+
+    else:
+        formatted.append(
+            {
+                "date": "",
+                "event": str(dates),
+            }
+        )
+
+    return formatted[:5]
+
+
+def render_answer_card(
+    article,
+    rank=1,
+    query="",
+    is_primary=False
+):
+    """
+    将搜索结果显示成面向用户的答案卡。
+    """
+
+    article_label = article.get(
+        "article",
+        "相关条款"
+    )
+
+    title = article.get(
+        "title_cn",
+        article.get(
+            "title_en",
+            "相关政策"
+        )
+    )
+
+    summary = short_text(
+        article.get("summary"),
+        180
+    )
+
+    user_question = get_user_question(
+        article
+    )
+
+    dates = format_dates(
+        article
+    )
+
+    article_key = get_article_key(
+        article
+    )
+
+    if is_primary:
+        st.markdown("#### 最相关")
+
+    with st.container(border=True):
+
+        st.markdown(
+            f"### {title}"
+        )
+
+        st.caption(
+            article_label
+        )
+
+        st.markdown(
+            f"**如果你想知道：** {user_question}"
+        )
+
+        if summary:
+            st.markdown(
+                "**一句话看懂**"
+            )
+            st.write(
+                summary
+            )
+
+        if dates:
+            st.markdown(
+                "**关键时间**"
+            )
+
+            for item in dates:
+
+                date_label = item.get(
+                    "date",
+                    ""
+                )
+
+                event = item.get(
+                    "event",
+                    ""
+                )
+
+                if date_label:
+                    st.markdown(
+                        f"**{date_label}**  \n{event}"
+                    )
+                elif event:
+                    st.write(
+                        event
+                    )
+
+        if article_key == "art6":
+
+            st.info(
+                "如果你想判断具体包装在不同年份需要满足什么要求，"
+                "可以进入左侧的「包装可回收性分析」。"
+            )
+
+        elif article_key == "art7":
+
+            st.info(
+                "如果你想知道具体塑料包装在 2030 / 2040 年"
+                "需要达到多少再生含量，可以进入左侧的"
+                "「再生含量情景分析」。"
+            )
+
+        with st.expander(
+            "查看更多政策信息"
+        ):
+
+            key_points = article.get(
+                "key_points"
+            )
+
+            if key_points:
+
+                st.markdown(
+                    "**主要要求**"
+                )
+
+                if isinstance(
+                    key_points,
+                    list
+                ):
+
+                    for point in key_points:
+                        st.write(
+                            f"• {normalize_search_text(point)}"
+                        )
+
+                else:
+                    st.write(
+                        normalize_search_text(
+                            key_points
+                        )
+                    )
+
+            status = article.get(
+                "status"
+            )
+
+            if status:
+
+                st.markdown(
+                    "**规则状态**"
+                )
+
+                st.write(
+                    normalize_search_text(
+                        status
+                    )
+                )
+
+            evidence = article.get(
+                "evidence"
+            )
+
+            if evidence:
+
+                st.markdown(
+                    "**可能需要关注的证明材料**"
+                )
+
+                if isinstance(
+                    evidence,
+                    list
+                ):
+
+                    for item in evidence:
+                        st.write(
+                            f"• {normalize_search_text(item)}"
+                        )
+
+                else:
+                    st.write(
+                        normalize_search_text(
+                            evidence
+                        )
+                    )
+    """
+    显示一张用户导向的政策答案卡。
+    """
+
+    article_label = article.get(
+        "article",
+        "相关条款"
+    )
+
+    title = article.get(
+        "title_cn",
+        article.get("title_en", "相关政策")
+    )
+
+    summary = short_text(
+        article.get("summary"),
+        180
+    )
+
+    user_question = get_user_question(article)
+
+    dates = format_dates(article)
+
+    if is_primary:
+        st.markdown("#### 最相关")
+
+    with st.container(border=True):
+
+        st.markdown(
+            f"### {title}"
+        )
+
+        st.caption(article_label)
+
+        st.markdown(
+            f"**如果你想知道：**  {user_question}"
+        )
+
+        if summary:
+            st.markdown("**一句话看懂**")
+            st.write(summary)
+
+        if dates:
+            st.markdown("**关键时间**")
+
+            for item in dates:
+                date_label = item.get(
+                    "date",
+                    ""
+                )
+
+                event = item.get(
+                    "event",
+                    ""
+                )
+
+                if date_label:
+                    st.markdown(
+                        f"**{date_label}**  \n{event}"
+                    )
+                else:
+                    st.write(event)
+
+        article_key = get_article_key(article)
+
+        # 对目前已有专题分析器的规则，给用户明确下一步
+        if article_key == "art6":
+            st.info(
+                "如果你想判断具体包装在不同年份需要满足什么要求，"
+                "可以进入左侧的「包装可回收性分析」。"
+            )
+
+        elif article_key == "art7":
+            st.info(
+                "如果你想知道具体包装在 2030 / 2040 年需要多少再生塑料，"
+                "可以进入左侧的「再生含量情景分析」。"
+            )
+
+        with st.expander("查看更多政策信息"):
+
+            key_points = article.get(
+                "key_points"
+            )
+
+            if key_points:
+                st.markdown("**主要要求**")
+
+                if isinstance(key_points, list):
+                    for point in key_points:
+                        st.write(
+                            f"• {normalize_search_text(point)}"
+                        )
+                else:
+                    st.write(
+                        normalize_search_text(key_points)
+                    )
+
+            status = article.get("status")
+
+            if status:
+                st.markdown("**规则状态**")
+                st.write(
+                    normalize_search_text(status)
+                )
+
+            evidence = article.get("evidence")
+
+            if evidence:
+                st.markdown("**可能需要关注的证明材料**")
+
+                if isinstance(evidence, list):
+                    for item in evidence:
+                        st.write(
+                            f"• {normalize_search_text(item)}"
+                        )
+                else:
+                    st.write(
+                        normalize_search_text(evidence)
+                    )
 # =========================================================
 # STYLE
 # =========================================================
@@ -177,11 +810,89 @@ st.markdown(
 )
 
 st.title("PPWR 核心政策导航")
-
-st.write(
-    "不需要先知道Article编号。可以从治理问题、关键词或政策路径进入。"
+st.markdown(
+    """
+    <div style="
+        margin-top: 0.4rem;
+        margin-bottom: 0.3rem;
+        font-size: 1.05rem;
+        color: #5B6573;
+    ">
+    不需要知道 Article 编号。直接输入你关心的产品、要求、年份或问题。
+    </div>
+    """,
+    unsafe_allow_html=True,
 )
 
+quick_query = st.text_input(
+    "快速找政策",
+    placeholder="例如：2030、第三国再生塑料、药品包装、可回收性、饮料瓶……",
+    label_visibility="collapsed",
+)
+
+st.caption(
+    "可以搜索中文、英文、Article 编号、年份或日常表达。"
+)
+# =========================================================
+# QUICK FIND RESULTS
+# =========================================================
+
+if quick_query:
+
+    quick_results = search_articles(
+        articles,
+        quick_query
+    )
+
+    if not quick_results:
+
+        st.warning(
+            "暂时没有找到直接相关的核心政策。"
+        )
+
+        st.caption(
+            "可以尝试更简单的关键词，例如："
+            "「再生塑料」「2030」「可回收性」「复用」「标签」。"
+        )
+
+    else:
+
+        st.markdown("---")
+
+        st.markdown(
+            f"### 找到 {len(quick_results)} 条相关规则"
+        )
+
+        st.caption(
+            "已按与你搜索内容的相关程度排序。"
+        )
+
+        # 最相关结果
+        primary_result = quick_results[0]["article"]
+
+        render_answer_card(
+            primary_result,
+            rank=1,
+            query=quick_query,
+            is_primary=True,
+        )
+
+        # 其他可能相关结果
+        if len(quick_results) > 1:
+
+            st.markdown("### 其他可能相关")
+
+            for index, item in enumerate(
+                quick_results[1:5],
+                start=2
+            ):
+
+                render_answer_card(
+                    item["article"],
+                    rank=index,
+                    query=quick_query,
+                    is_primary=False,
+                )
 st.caption(
     "当前覆盖经人工核验的核心条款，不是整部法规的全文搜索。"
 )
