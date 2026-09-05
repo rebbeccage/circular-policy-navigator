@@ -1069,6 +1069,11 @@ explorer = st.Page(
     icon=":material/search:"
 )
 
+implementation_tracker = st.Page(
+    "pages/4_PPWR_Implementation_Tracker.py",
+    title="PPWR 实施进展",
+    icon=":material/update:"
+)
 
 recyclability = st.Page(
     recyclability_page,
@@ -1096,7 +1101,8 @@ pg = st.navigation(
         ],
 
         "政策导航": [
-            explorer
+            explorer,
+    implementation_tracker
         ],
 
         "专题分析": [
