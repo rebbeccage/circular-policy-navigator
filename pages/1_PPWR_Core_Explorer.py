@@ -822,11 +822,27 @@ st.markdown(
     </div>
     """,
     unsafe_allow_html=True,
+)# =========================================================
+# 接收首页带过来的搜索内容
+# =========================================================
+
+incoming_query = st.session_state.pop(
+    "ppwr_prefill_query",
+    None
 )
+
+if incoming_query is not None:
+    st.session_state[
+        "ppwr_quick_query"
+    ] = incoming_query
 
 quick_query = st.text_input(
     "快速找政策",
-    placeholder="例如：第三国再生塑料、2030、药品包装、可回收性、饮料瓶……",
+    key="ppwr_quick_query",
+    placeholder=(
+        "例如：可回收性、第三国再生塑料、"
+        "2030、药品包装、Article 7……"
+    ),
     label_visibility="collapsed",
 )
 

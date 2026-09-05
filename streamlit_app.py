@@ -1,4 +1,5 @@
 import streamlit as st
+from pathlib import Path
 import yaml
 from graphviz import Digraph
 
@@ -81,182 +82,164 @@ st.markdown(
 
 def home_page():
 
-    st.markdown(
-        '<div class="eyebrow">Policy Intelligence Tool</div>',
-        unsafe_allow_html=True
+    # =====================================================
+    # SEARCH ACTION
+    # =====================================================
+
+    def go_to_explorer(query_text):
+        query_text = (query_text or "").strip()
+
+        if not query_text:
+            st.warning(
+                "请输入你要查的关键词或年份。"
+            )
+            return
+
+        # 把首页输入暂存起来，带到政策检索页
+        st.session_state["ppwr_prefill_query"] = query_text
+
+        st.switch_page(
+            explorer
+        )
+
+    # =====================================================
+    # HERO
+    # =====================================================
+
+    st.caption("PPWR 政策检索器")
+
+    st.title(
+        "一键查询"
     )
 
-    st.title("Circular Policy Navigator")
+    st.write(
+        "不需要输入具体第几条法规条款。"
+        "输入问题、产品、年份或政策主题即可查找。"
+    )
+
+    # =====================================================
+    # MAIN SEARCH
+    # =====================================================
+
+    st.write("")
+
+    with st.form(
+        "home_search_form",
+        clear_on_submit=False,
+    ):
+
+        home_query = st.text_input(
+            "搜索 PPWR",
+            placeholder=(
+                "例如：2030 年有哪些要求？"
+                "第三国再生塑料能否计入？"
+                "药品包装是否豁免？"
+            ),
+            label_visibility="collapsed",
+        )
+
+        search_clicked = st.form_submit_button(
+            "查找相关规则",
+            type="primary",
+            use_container_width=True,
+        )
+
+        if search_clicked:
+            go_to_explorer(
+                home_query
+            )
+
+    st.caption(
+        "可以直接输入完整问题，也支持中文、英文、年份和条款编号。"
+    )
+
+    st.markdown("---")
+
+    # =====================================================
+    # DEEP ANALYSIS
+    # =====================================================
 
     st.markdown(
-        """
-        <div class="intro">
-        将复杂循环经济法规转化为可检索的政策结构、情景判断、
-        关键时间节点与行动准备。
-        </div>
-        """,
-        unsafe_allow_html=True
+        "## 已经有一个具体包装问题？"
     )
 
     st.caption(
-        "当前模块 · 欧盟《包装与包装废弃物法规》 "
-        "Regulation (EU) 2025/40 · PPWR"
+        "选择对应工具，直接判断你的具体情况。"
     )
 
-    st.divider()
+    col1, col2 = st.columns(2)
 
-    st.subheader("你想解决什么问题？")
+    # -----------------------------------------------------
+    # RECYCLABILITY
+    # -----------------------------------------------------
 
-    st.caption(
-        "不需要先知道Article编号，可以直接从实际问题进入。"
-    )
+    with col1:
 
-    left, right = st.columns(2)
-
-    with left:
-
-        with st.container(border=True):
-
-            st.caption("政策导航")
-
-            st.header("我想了解PPWR规定了什么")
-
-            st.write(
-                "适合第一次接触PPWR，或需要快速定位某个政策主题。"
-            )
-
-            st.markdown(
-                """
-                可以查询：
-
-                - 包装可回收性
-                - 塑料包装再生含量
-                - 包装减量
-                - 可复用包装
-                - refill / 补充装
-                - 标签与数字信息
-                - EPR生产者责任
-                - DRS押金返还
-                """
-            )
-
-            st.info(
-                "请从左侧进入「PPWR 核心政策导航」"
-            )
-
-
-    with right:
-
-        with st.container(border=True):
-
-            st.caption("专题分析")
-
-            st.header("我有一个具体包装问题")
-
-            st.write(
-                "适合企业、政策研究人员和咨询人员进行情景判断。"
-            )
-
-            st.markdown(
-                """
-                当前提供：
-
-                **包装可回收性分析**
-                - 2030 / 2035 / 2038准入要求
-                - DfR与规模化再生
-                - 特殊包装与创新包装
-
-                **再生含量情景分析**
-                - 2030 / 2040最低比例
-                - 豁免
-                - 第三国等效要求
-                """
-            )
-
-            st.info(
-                "请从左侧「专题分析」选择对应工具"
-            )
-
-
-    st.divider()
-
-    st.subheader("工具如何工作")
-
-    c1, c2, c3, c4 = st.columns(4)
-
-    with c1:
-        st.markdown("**01 · 找政策**")
-        st.caption("从实际问题定位规则")
-
-    with c2:
-        st.markdown("**02 · 看懂要求**")
-        st.caption("识别目标和时间节点")
-
-    with c3:
-        st.markdown("**03 · 判断情景**")
-        st.caption("判断适用性和特殊条件")
-
-    with c4:
-        st.markdown("**04 · 准备行动**")
-        st.caption("转化为数据和证据准备")
-
-
-    st.divider()
-
-    st.subheader("当前专题分析")
-
-    a, b = st.columns(2)
-
-    with a:
-
-        with st.container(border=True):
-
-            st.caption("已上线")
-
-            st.markdown(
-                "### 包装可回收性分析"
-            )
-
-            st.write(
-                "回答：我的包装未来还能否满足欧盟市场的可回收性要求？"
-            )
+        with st.container(
+            border=True
+        ):
 
             st.caption(
-                "对应 PPWR Article 6"
+                "包装可回收性"
             )
 
-
-    with b:
-
-        with st.container(border=True):
-
-            st.caption("已上线")
-
             st.markdown(
-                "### 再生含量情景分析"
+                "### 我的包装未来还能进入欧盟市场吗？"
             )
 
             st.write(
-                "回答：我的塑料包装需要使用多少再生塑料？"
+                "查看 2030、2035、2038 "
+                "不同阶段需要达到的可回收性要求。"
             )
+
+            if st.button(
+                "开始判断",
+                key="home_recyclability",
+                type="primary",
+                use_container_width=True,
+            ):
+                st.switch_page(
+                    recyclability
+                )
+
+    # -----------------------------------------------------
+    # RECYCLED CONTENT
+    # -----------------------------------------------------
+
+    with col2:
+
+        with st.container(
+            border=True
+        ):
 
             st.caption(
-                "对应 PPWR Article 7"
+                "再生含量"
             )
 
+            st.markdown(
+                "### 我的塑料包装需要多少再生料？"
+            )
 
-    st.divider()
+            st.write(
+                "查看 2030、2040 "
+                "最低比例，以及豁免和第三国材料要求。"
+            )
+
+            if st.button(
+                "开始判断",
+                key="home_recycled_content",
+                type="primary",
+                use_container_width=True,
+            ):
+                st.switch_page(
+                    recycled_content
+                )
+
+    st.write("")
 
     st.caption(
-        "Circular Policy Navigator · Prototype"
-        "  |  Policy research tool — not legal advice"
+        "当前重点覆盖 PPWR 核心规则检索、包装可回收性和塑料包装再生含量。"
     )
-
-
-# =========================================================
-# ARTICLE 6 DATA LOADER
-# =========================================================
-
 @st.cache_data
 def load_article6():
 
