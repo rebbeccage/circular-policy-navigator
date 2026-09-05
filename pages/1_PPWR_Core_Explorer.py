@@ -4,7 +4,7 @@ from graphviz import Digraph
 
 
 st.set_page_config(
-    page_title="PPWR 核心政策导航",
+    page_title="快速查找 PPWR 规则",
     layout="wide"
 )
 import re
@@ -385,7 +385,7 @@ def render_answer_card(
     )
 
     if is_primary:
-        st.markdown("#### 最相关")
+        st.markdown("#### 建议先看")
 
     with st.container(border=True):
 
@@ -438,20 +438,20 @@ def render_answer_card(
         if article_key == "art6":
 
             st.info(
-                "如果你想判断具体包装在不同年份需要满足什么要求，"
-                "可以进入左侧的「包装可回收性分析」。"
+                "想判断具体包装在不同年份需要满足什么要求，"
+                "请进入左侧栏的「包装可回收性分析」。"
             )
 
         elif article_key == "art7":
 
             st.info(
                 "如果你想知道具体塑料包装在 2030 / 2040 年"
-                "需要达到多少再生含量，可以进入左侧的"
+                "需要达到多少再生含量，请进入左侧的"
                 "「再生含量情景分析」。"
             )
 
         with st.expander(
-            "查看更多政策信息"
+    "查看更多政策信息"
         ):
 
             key_points = article.get(
@@ -461,7 +461,7 @@ def render_answer_card(
             if key_points:
 
                 st.markdown(
-                    "**主要要求**"
+                    "**具体要求**"
                 )
 
                 if isinstance(
@@ -562,7 +562,7 @@ def render_answer_card(
         )
 
         if summary:
-            st.markdown("**一句话看懂**")
+            st.markdown("**核心要求**")
             st.write(summary)
 
         if dates:
@@ -591,14 +591,14 @@ def render_answer_card(
         # 对目前已有专题分析器的规则，给用户明确下一步
         if article_key == "art6":
             st.info(
-                "如果你想判断具体包装在不同年份需要满足什么要求，"
-                "可以进入左侧的「包装可回收性分析」。"
+                "想了解具体包装在不同年份需要满足什么要求，"
+                "请进入左侧的「包装可回收性分析」。"
             )
 
         elif article_key == "art7":
             st.info(
-                "如果你想知道具体包装在 2030 / 2040 年需要多少再生塑料，"
-                "可以进入左侧的「再生含量情景分析」。"
+                "想知道具体包装在 2030 / 2040 年需要多少再生塑料，"
+                "请进入左侧的「再生含量情景分析」。"
             )
 
         with st.expander("查看更多政策信息"):
@@ -608,7 +608,7 @@ def render_answer_card(
             )
 
             if key_points:
-                st.markdown("**主要要求**")
+                st.markdown("**具体要求**")
 
                 if isinstance(key_points, list):
                     for point in key_points:
@@ -623,7 +623,7 @@ def render_answer_card(
             status = article.get("status")
 
             if status:
-                st.markdown("**规则状态**")
+                st.markdown("**目前到什么程度**")
                 st.write(
                     normalize_search_text(status)
                 )
@@ -631,7 +631,7 @@ def render_answer_card(
             evidence = article.get("evidence")
 
             if evidence:
-                st.markdown("**可能需要关注的证明材料**")
+                st.markdown("**可能需要准备的材料**")
 
                 if isinstance(evidence, list):
                     for item in evidence:
@@ -809,7 +809,7 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-st.title("PPWR 核心政策导航")
+st.title("快速查找 PPWR 规则")
 st.markdown(
     """
     <div style="
@@ -818,7 +818,7 @@ st.markdown(
         font-size: 1.05rem;
         color: #5B6573;
     ">
-    不需要知道 Article 编号。直接输入你关心的产品、要求、年份或问题。
+    输入产品、政策要求、年份或你关心的问题，快速找到相关规则和关键信息。
     </div>
     """,
     unsafe_allow_html=True,
@@ -826,77 +826,559 @@ st.markdown(
 
 quick_query = st.text_input(
     "快速找政策",
-    placeholder="例如：2030、第三国再生塑料、药品包装、可回收性、饮料瓶……",
+    placeholder="例如：第三国再生塑料、2030、药品包装、可回收性、饮料瓶……",
     label_visibility="collapsed",
 )
 
 st.caption(
-    "可以搜索中文、英文、Article 编号、年份或日常表达。"
+    "支持中文、英文、政策条款编号或年份搜索，也可以直接输入一个问题。。"
 )
+# =========================================================
+# YEAR SNAPSHOT
+# 当用户直接搜索年份时，
+# 显示这一年有哪些重要 PPWR 规则变化
+# =========================================================
+
+def detect_year_query(query):
+    """
+    判断用户是否直接查询一个年份。
+    支持：
+    2030
+    2030年
+    """
+
+    if not query:
+        return None
+
+    cleaned = query.strip()
+
+    match = re.fullmatch(
+        r"(20\d{2})年?",
+        cleaned
+    )
+
+    if match:
+        return match.group(1)
+
+    return None
+
+
+def collect_year_events(articles, year):
+    """
+    从所有核心条款中提取指定年份的政策事件。
+    """
+
+    events = []
+
+    for article in articles:
+
+        article_dates = format_dates(article)
+
+        for item in article_dates:
+
+            date_label = str(
+                item.get("date", "")
+            )
+
+            event_text = str(
+                item.get("event", "")
+            )
+
+            if year in date_label:
+
+                events.append(
+                    {
+                        "article": article,
+                        "date": date_label,
+                        "event": event_text,
+                        "conditional": (
+                            "开始时间有条件" in date_label
+                        ),
+                    }
+                )
+
+    return events
+
+
+def render_year_snapshot(articles, year):
+    """
+    将某一年的政策变化显示成用户容易理解的年度快照。
+    """
+
+    events = collect_year_events(
+        articles,
+        year
+    )
+
+    st.markdown("---")
+
+    st.markdown(
+        f"# {year} 年政策快照"
+    )
+
+    st.write(
+        "快速查看这一年前后需要重点关注的 PPWR 规则变化。"
+    )
+
+    if not events:
+
+        st.info(
+            f"当前核心政策数据中没有找到 {year} 年的明确时间节点。"
+        )
+
+        st.caption(
+            "这不代表这一年没有相关要求，"
+            "你也可以尝试搜索具体主题或 Article 编号。"
+        )
+
+        return
+
+    # 统计涉及多少个 Article
+    article_keys = set()
+
+    for item in events:
+
+        article_key = get_article_key(
+            item["article"]
+        )
+
+        if article_key:
+            article_keys.add(
+                article_key
+            )
+
+    conditional_count = sum(
+        1
+        for item in events
+        if item["conditional"]
+    )
+
+    # ---------------------------------------------
+    # 顶部概览
+    # ---------------------------------------------
+
+    col1, col2, col3 = st.columns(3)
+
+    with col1:
+        st.metric(
+            "关键变化",
+            len(events)
+        )
+
+    with col2:
+        st.metric(
+            "涉及规则",
+            len(article_keys)
+        )
+
+    with col3:
+        st.metric(
+            "条件生效",
+            conditional_count
+        )
+
+    if conditional_count > 0:
+
+        st.caption(
+            "部分要求虽然已经写入 PPWR，"
+            "但实际开始适用的时间还取决于后续法案何时出台。"
+        )
+
+    st.markdown(
+        "### 重点事项"
+    )
+
+    # ---------------------------------------------
+    # 逐项显示年度变化
+    # ---------------------------------------------
+
+    for item in events:
+
+        article = item["article"]
+
+        title = article.get(
+            "title_cn",
+            article.get(
+                "title_en",
+                "相关规则"
+            )
+        )
+
+        article_label = article.get(
+            "article",
+            ""
+        )
+
+        event_text = item.get(
+            "event",
+            ""
+        )
+
+        user_question = get_user_question(
+            article
+        )
+
+        article_key = get_article_key(
+            article
+        )
+
+        with st.container(
+            border=True
+        ):
+
+            st.markdown(
+                f"### {title}"
+            )
+
+            if item["conditional"]:
+                st.caption(
+                    f"{article_label} · 条件生效"
+                )
+            else:
+                st.caption(
+                    f"{article_label} · {year}"
+                )
+
+            if event_text:
+                st.markdown(
+                    f"**发生什么？**  \n{event_text}"
+                )
+
+            st.markdown(
+                f"**你可能关心：** {user_question}"
+            )
+
+            if article_key == "art6":
+
+                st.info(
+                    "需要判断具体包装吗？"
+                    "请进入左侧「包装可回收性分析」。"
+                )
+
+            elif article_key == "art7":
+
+                st.info(
+                    "需要判断具体再生含量吗？"
+                    "请进入左侧「再生含量情景分析」。"
+                )
+
+    st.caption(
+        "以上仅汇总当前工具已收录的 PPWR 核心条款，"
+        "不代表法规全文的全部时间节点。"
+    )
 # =========================================================
 # QUICK FIND RESULTS
 # =========================================================
 
 if quick_query:
 
-    quick_results = search_articles(
-        articles,
+    # ---------------------------------------------
+    # 情况 1：用户直接搜索年份
+    # ---------------------------------------------
+    year_query = detect_year_query(
         quick_query
     )
 
-    if not quick_results:
+    if year_query:
 
-        st.warning(
-            "暂时没有找到直接相关的核心政策。"
+        render_year_snapshot(
+            articles,
+            year_query
         )
 
-        st.caption(
-            "可以尝试更简单的关键词，例如："
-            "「再生塑料」「2030」「可回收性」「复用」「标签」。"
-        )
-
+    # ---------------------------------------------
+    # 情况 2：普通关键词 / 问题 / Article 搜索
+    # ---------------------------------------------
     else:
 
-        st.markdown("---")
+        quick_results = search_articles(
+            articles,
+            quick_query
+        )
 
-        st.markdown(
-            f"### 找到 {len(quick_results)} 条相关规则"
+        if not quick_results:
+
+            st.warning(
+                "暂时没有找到直接相关的核心规则。"
+            )
+
+            st.caption(
+                "可以尝试更简单的关键词，例如："
+                "「再生塑料」「2030」「可回收性」"
+                "「复用」「标签」。"
+            )
+
+        else:
+
+            st.markdown("---")
+
+            st.markdown(
+                f"### 找到 {len(quick_results)} 项相关规则"
+            )
+
+            st.caption(
+                "已按与你搜索内容的相关程度排序。"
+            )
+
+            # 最相关结果
+            primary_result = (
+                quick_results[0]["article"]
+            )
+
+            render_answer_card(
+                primary_result,
+                rank=1,
+                query=quick_query,
+                is_primary=True,
+            )
+
+            # 其他相关结果
+            if len(quick_results) > 1:
+
+                st.markdown(
+                    "### 你还可以看看"
+                )
+
+                for index, item in enumerate(
+                    quick_results[1:5],
+                    start=2
+                ):
+
+                    render_answer_card(
+                        item["article"],
+                        rank=index,
+                        query=quick_query,
+                        is_primary=False,
+                    )
+# =========================================================
+# YEAR SNAPSHOT
+# 当用户搜索一个年份时，不再只返回 Article 列表，
+# 而是直接告诉用户这一年有哪些重要政策变化。
+# =========================================================
+
+def detect_year_query(query):
+    """
+    判断用户是不是在直接查询一个年份。
+    支持：
+    2030
+    2030年
+    """
+    if not query:
+        return None
+
+    cleaned = query.strip()
+
+    match = re.fullmatch(
+        r"(20\d{2})年?",
+        cleaned
+    )
+
+    if match:
+        return match.group(1)
+
+    return None
+
+
+def collect_year_events(articles, year):
+    """
+    从所有 Article 的 dates 字段中提取某一年的事件。
+    """
+    events = []
+
+    for article in articles:
+
+        article_dates = format_dates(article)
+
+        for item in article_dates:
+
+            date_label = str(
+                item.get("date", "")
+            )
+
+            event_text = str(
+                item.get("event", "")
+            )
+
+            if year in date_label:
+
+                events.append(
+                    {
+                        "article": article,
+                        "date": date_label,
+                        "event": event_text,
+                        "conditional": (
+                            "条件生效" in date_label
+                        ),
+                    }
+                )
+
+    return events
+
+
+def render_year_snapshot(
+    articles,
+    year
+):
+    """
+    显示面向普通用户的年度政策快照。
+    """
+
+    events = collect_year_events(
+        articles,
+        year
+    )
+
+    st.markdown("---")
+
+    st.markdown(
+        f"# {year} 年需要关注什么"
+    )
+
+    st.write(
+        "快速查看这一年前后需要重点关注的 PPWR 规则变化。"
+    )
+
+    if not events:
+
+        st.info(
+            f"当前核心政策数据中没有找到 {year} 年的明确时间节点。"
         )
 
         st.caption(
-            "已按与你搜索内容的相关程度排序。"
+            "这不代表这一年没有相关要求，"
+            "你也可以尝试搜索具体主题或 Article 编号。"
         )
 
-        # 最相关结果
-        primary_result = quick_results[0]["article"]
+        return
 
-        render_answer_card(
-            primary_result,
-            rank=1,
-            query=quick_query,
-            is_primary=True,
+    # 去重统计 Article 数量
+    article_keys = set()
+
+    for item in events:
+        article_keys.add(
+            get_article_key(
+                item["article"]
+            )
         )
 
-        # 其他可能相关结果
-        if len(quick_results) > 1:
+    conditional_count = sum(
+        1
+        for item in events
+        if item["conditional"]
+    )
 
-            st.markdown("### 其他可能相关")
+    # 顶部三个简单指标
+    col1, col2, col3 = st.columns(3)
 
-            for index, item in enumerate(
-                quick_results[1:5],
-                start=2
-            ):
+    with col1:
+        st.metric(
+            "关键变化",
+            len(events)
+        )
 
-                render_answer_card(
-                    item["article"],
-                    rank=index,
-                    query=quick_query,
-                    is_primary=False,
+    with col2:
+        st.metric(
+            "涉及条款",
+            len(article_keys)
+        )
+
+    with col3:
+        st.metric(
+            "生效时间有条件",
+            conditional_count
+        )
+
+    st.caption(
+        "“条件生效”表示法规已经确定方向，"
+        "但实际起始时间仍受后续法案发布时间影响。"
+    )
+
+    st.markdown("### 重点变化")
+
+    for number, item in enumerate(
+        events,
+        start=1
+    ):
+
+        article = item["article"]
+
+        title = article.get(
+            "title_cn",
+            article.get(
+                "title_en",
+                "相关规则"
+            )
+        )
+
+        article_label = article.get(
+            "article",
+            ""
+        )
+
+        event_text = item["event"]
+
+        date_label = item["date"]
+
+        user_question = get_user_question(
+            article
+        )
+
+        with st.container(border=True):
+
+            col_left, col_right = st.columns(
+                [5, 1.4]
+            )
+
+            with col_left:
+
+                st.markdown(
+                    f"### {title}"
                 )
-st.caption(
-    "当前覆盖经人工核验的核心条款，不是整部法规的全文搜索。"
-)
 
+                st.caption(
+                    article_label
+                )
+
+            with col_right:
+
+                if item["conditional"]:
+                    st.markdown(
+                        "**条件生效**"
+                    )
+                else:
+                    st.markdown(
+                        f"**{year}**"
+                    )
+
+            st.markdown(
+                f"**重点变化：** {event_text}"
+            )
+
+            st.caption(
+                f"你可能关心：{user_question}"
+            )
+
+            article_key = get_article_key(
+                article
+            )
+
+            if article_key == "art6":
+                st.info(
+                    "需要判断具体包装吗？"
+                    "请进入左侧「包装可回收性分析」。"
+                )
+
+            elif article_key == "art7":
+
+                st.info(
+                    "需要计算具体再生含量吗？"
+                    "请进入左侧「再生含量情景分析」。"
+                )
+
+    st.caption(
+        "以上内容来自当前 Navigator 已收录的 PPWR 核心条款，"
+        "并非对法规全文所有日期的穷尽式检索。"
+    )
 
 # =========================================================
 # PANORAMA MAP
@@ -904,7 +1386,7 @@ st.caption(
 
 st.divider()
 
-st.subheader("PPWR 治理路径全景")
+st.subheader("PPWR 实施全景")
 
 st.caption(
     "从源头设计一直到废弃物管理，查看主要政策工具之间的关系。"
@@ -1023,7 +1505,7 @@ with search_col:
         "搜索政策问题或关键词",
         placeholder=(
             "例如：我的包装能否回收、再生料、第三国、"
-            "reuse、EPR、标签、减量..."
+            "重复使用、EPR、标签、减量..."
         )
     )
 
@@ -1031,7 +1513,7 @@ with search_col:
 with path_col:
 
     selected_path = st.selectbox(
-        "治理路径",
+        "实施路径",
         ["全部路径"]
         + list(GOVERNANCE_PATHS.keys())
     )
